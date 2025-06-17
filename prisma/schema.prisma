@@ -15,13 +15,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
   email     String
   password  String
-  role      Role     @default(CLIENT)
-  createdAt DateTime @default(now())
+  role      Role      @default(CLIENT)
+  createdAt DateTime  @default(now())
   updatedAt DateTime
+  Product   Product[]
 }
 
 enum Role {
@@ -40,13 +41,15 @@ model Product {
   id           String         @id @default(uuid())
   name         String
   price        Float
-  discription  String?
+  description  String?
   categoryId   String
   createdAt    DateTime       @default(now())
   category     Category       @relation(fields: [categoryId], references: [id])
   active       Boolean
+  userId       String
   PrdouctImage PrdouctImage[]
   OrderItems   OrderItems[]
+  user         User           @relation(fields: [userId], references: [id])
 }
 
 model PrdouctImage {
