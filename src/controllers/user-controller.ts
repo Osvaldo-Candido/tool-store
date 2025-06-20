@@ -36,10 +36,9 @@ export class UserController {
       }
      }
 
-     const userValidate = userCreateSchema.parse(formData)
+     const user = userCreateSchema.parse(formData)
      
-
-     return reply.status(201).send(formData)
+     return reply.status(201).send(user)
      } catch (error) {
       
      }
