@@ -1,5 +1,5 @@
 import { UserRepository } from "../../repositories/user-repository";
-import { User } from "./user-create";
+import { User } from "../../../generated/prisma";
 
 export class UserUpdateUseCase {
   constructor(
@@ -16,7 +16,7 @@ export class UserUpdateUseCase {
     const userUpdated = await this.userRepository.update({
       name: data.name ?? user.name,
       email: data.email ?? user.email,
-      avatar: data.avatar ?? user.avatar 
+      avatar: data.avatar ?? user.avatar
     }, userId)
 
     return userUpdated

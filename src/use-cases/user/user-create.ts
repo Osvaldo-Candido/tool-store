@@ -1,7 +1,7 @@
 import { hash } from "bcryptjs"
 import { UserRepository } from "../../repositories/user-repository"
 
-enum Role {
+export enum Role {
   ADMIN = 'ADMIN',
   CLIENT = 'CLIENT'
 }
@@ -22,9 +22,10 @@ export interface UserRequestDTO {
   email:  string
   password: string
   role: Role
+  avatar?: string
 }
 
-export class CreateUserUseCase {
+export class UserCreateUseCase {
   constructor(
     private userRepository:UserRepository
   ){}
@@ -48,7 +49,8 @@ export class CreateUserUseCase {
       name: data.name,
       email: data.email,
       password: hashPassword,
-      role: Role.CLIENT
+      role: data.role,
+      avatar: data.avatar 
     })
 
     return user

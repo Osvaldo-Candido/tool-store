@@ -1,3 +1,4 @@
+import { ProductImage } from "../../../generated/prisma"
 import { CategoryRepository } from "../../repositories/category-repository"
 import { ProductRepository } from "../../repositories/product-repository"
 import { UserRepository } from "../../repositories/user-repository"
@@ -10,6 +11,7 @@ export interface Product {
   active: boolean
   createdAt: Date
   categoryId: string
+  images: ProductImage []
 }
 
 export interface ProductRequestDTO {
@@ -18,6 +20,10 @@ export interface ProductRequestDTO {
   description: string
   categoryId: string
   active: boolean
+  images: Array<{
+    url: string
+    publicId: string
+  }>
 }
 
 export class ProductCreateUseCase {
@@ -42,12 +48,19 @@ export class ProductCreateUseCase {
       {
         throw new Error('Category inavlid')
       }
+
+      const images = data.images.map((image) => {
+        return {
+          url: image.url,
+          publicId:  image.publicId
+        }
+      })
+
       const createdProduct = await this.productRepository.create({
-        name: data.name,
-        price: data.price,
-        description: data.description,
-        active: true,
-        categoryId: categoryId
+        ...data,
+        userId,
+        categoryId,
+        active: data.active ?? true
       })
 
       return createdProduct

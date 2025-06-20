@@ -73,5 +73,7 @@ export class OrderCreateUseCase {
       userId: userId,
       items: productWithPrice
     })
+
+    return orderCreated
   }
 }
