@@ -2,11 +2,13 @@ import { MultipartFile } from '@fastify/multipart'
 import {v2 as cloudinary} from 'cloudinary'
 import { FastifyInstance } from 'fastify/types/instance'
 import { pipeline } from 'stream/promises'
+import { env } from '../env'
 
-cloudinary.config({
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-  cloud_name: process.env.CLOUD_NAME
+cloudinary.config({ 
+  cloud_name: env.CLOUDINARY_CLOUD_NAME,
+  api_key: env.CLOUDINARY_API_KEY,
+  api_secret: env.CLOUDINARY_API_SECRET,
+  secure: true // Recomendado para produção
 })
 
 export class CloudinaryService {
@@ -15,11 +17,7 @@ export class CloudinaryService {
   {
     return new Promise<{url: string, public_id: string}>((resolve, reject) => {
       const uploadStrem = cloudinary.uploader.upload_stream({
-        folder,
-        transformation: [
-          {width: 200, height: 200, crop: 'thumb',gravity: 'auto:face'},
-          {quality: 'auto:best'}
-        ]
+        folder
       },
       (err, result) => {
           if(err || !result)

@@ -5,6 +5,6 @@ export interface ProductRepository {
   create(data: ProductRequestDTO & {userId: string}):Promise<Product>
   update(data: Partial<Product>):Promise<Product>
   delete(productId: string):Promise<void>
-  getAll():Promise<Product>
-  findById(productId: string):Promise<Product>
+  getAll():Promise<Product []>
+  findById(productId: string):Promise<Product | null>
 }

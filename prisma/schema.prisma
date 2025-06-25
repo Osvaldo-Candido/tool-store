@@ -63,12 +63,14 @@ model ProductImage {
 }
 
 model OrderItems {
-  id        String  @id @default(uuid())
-  productId String
-  subtotal  Float
-  quantity  Int
-  product   Product @relation(fields: [productId], references: [id])
-  Order     Order[]
+  id         String  @id @default(uuid())
+  productId  String
+  subtotal   Float
+  unitiPrice Float
+  quantity   Int
+  itemId     String
+  product    Product @relation(fields: [productId], references: [id])
+  order      Order   @relation(fields: [itemId], references: [id])
 }
 
 enum Status {
@@ -77,12 +79,12 @@ enum Status {
 }
 
 model Order {
-  id         String     @id @default(uuid())
-  userId     String
-  totalAmout Float
-  status     Status
-  itemId     String
-  createdAt  DateTime   @default(now())
-  items      OrderItems @relation(fields: [itemId], references: [id])
-  user       User       @relation(fields: [userId], references: [id])
+  id           String       @id @default(uuid())
+  userId       String
+  totalAmonut  Float
+  status       Status
+  createdAt    DateTime     @default(now())
+  user         User         @relation(fields: [userId], references: [id])
+  orderItemsId String?
+  OrderItems   OrderItems[]
 }

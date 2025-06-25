@@ -1,24 +1,20 @@
 import { OrderRepository } from "../../repositories/order-repository"
 import { ProductRepository } from "../../repositories/product-repository"
 import { UserRepository } from "../../repositories/user-repository"
-
-enum Status {
-  CANCELED = 'CANCELED',
-  SHIPPED = 'SHIPPED'
-}
+import { Status } from "../../../generated/prisma"
 
 export interface OrderItem {
   productId: string
-  unitiPrice: number
   quantity: number
   subtotal: number
+  unitiPrice: number
 }
 
 export interface OrderResponseDTO {
   userId: string
   items:  OrderItem []
-  total: number
-  createdAt: Date
+  totalAmount: number
+  status: Status
 }
 
 export interface OrderCreateRequestDTO {
@@ -26,7 +22,7 @@ export interface OrderCreateRequestDTO {
   status: Status
   items:  Array<{
     productId: string,
-    quantity: number
+    quantity: number,
   }>
   total: number
 }
@@ -41,14 +37,18 @@ export class OrderCreateUseCase {
   async execute(data: OrderCreateRequestDTO, userId: string){
     const user = await this.userRepository.findById(userId)
 
+    console.log(data)
+
     if(!user)
     {
       throw new Error('This user is unauthorized')
     }
 
-    const products = await Promise.all( data.items.map((item) => {
+    const products = await Promise.all(data.items.map((item) => {
       return this.productRepository.findById(item.productId)
     }))
+
+    console.log(products)
 
     if(products.some(p => !p || !p.active))
     {
@@ -56,22 +56,22 @@ export class OrderCreateUseCase {
     }
 
     const productWithPrice = data.items.map((item) => {
-      const product = products.find(p => p.id === item.productId)!
+      const product = products.find(p => p?.id === item.productId)!
 
       return {
         ...item,
-        unitiPrice: product?.price,
+        unitiPrice: product.price,
         subtotal: product.price * item.quantity
       }
     })
 
-    const totalAmout = productWithPrice.reduce((sum, item) => sum + item.subtotal, 0)
+    const total = productWithPrice.reduce((sum, item) => sum + item.subtotal, 0)
 
     const orderCreated = await this.orderRepository.create({
       status: Status.SHIPPED,
-      total: totalAmout,
+      totalAmount: total,
       userId: userId,
-      items: productWithPrice
+      items: productWithPrice,
     })
 
     return orderCreated

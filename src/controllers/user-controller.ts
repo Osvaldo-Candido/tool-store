@@ -2,13 +2,14 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { CloudinaryService } from "../config/cloudinary";
 import z from 'zod'
 import { Role } from "../use-cases/user/user-create";
+import { userCreateFactory } from "../factories/user/user-create-factory";
 
 const userCreateSchema = z.object({
   name: z.string().min(3, 'O nome deve ter no mínimo 3 carácteres'),
   email: z.string().email('O email adicionado é inválido'),
   password: z.string().min(6,'A palavra passe deve ter no mínimo 6 carácteres'),
   role: z.nativeEnum(Role).default(Role.CLIENT),
-  avatar: z.string()
+  avatar: z.string().optional()
 }) 
 
 export class UserController {
@@ -36,11 +37,17 @@ export class UserController {
       }
      }
 
-     const user = userCreateSchema.parse(formData)
+     const userValidade = userCreateSchema.parse(formData)
      
+     const user = await userCreateFactory().execute({
+      ...userValidade,
+      avatar: avatarUrl
+     })
+
      return reply.status(201).send(user)
      } catch (error) {
-      
+      console.log(error)
+      throw new Error('Erro')
      }
      
 

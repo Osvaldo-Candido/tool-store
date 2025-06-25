@@ -2,7 +2,7 @@ import { CategoryPrismaRepository } from "../../repositories/prisma/category-rep
 import { UserRepositoryPrisma } from "../../repositories/prisma/user-repository-prisma";
 import { CategoryCreateUseCase } from "../../use-cases/category/category-create";
 
-export function CategoryCreateFactory()
+export function categoryCreateFactory()
 {
   const categoryRepositoryPrisma = new CategoryPrismaRepository()
   const userRepositoryPrisma = new UserRepositoryPrisma()

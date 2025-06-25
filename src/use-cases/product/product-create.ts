@@ -17,7 +17,7 @@ export interface Product {
 export interface ProductRequestDTO {
   name: string
   price: number
-  description: string
+  description?: string
   categoryId: string
   active: boolean
   images: Array<{
@@ -48,13 +48,6 @@ export class ProductCreateUseCase {
       {
         throw new Error('Category inavlid')
       }
-
-      const images = data.images.map((image) => {
-        return {
-          url: image.url,
-          publicId:  image.publicId
-        }
-      })
 
       const createdProduct = await this.productRepository.create({
         ...data,

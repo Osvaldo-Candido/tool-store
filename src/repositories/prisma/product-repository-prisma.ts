@@ -11,8 +11,19 @@ export class ProductRepositoryPrisma implements ProductRepository {
         price: data.price,
         active: data.active,
         userId: data.userId,
-        categoryId: data.categoryId
-        
+        categoryId: data.categoryId,
+        description: data.description,
+        images: {
+          createMany:{
+            data: data.images.map(i => ({
+              url: i.url,
+              publicId: i.publicId
+            }))
+          }
+        }
+      },
+      include: {
+        images: true
       }
     }) 
   }
@@ -22,11 +33,19 @@ export class ProductRepositoryPrisma implements ProductRepository {
   delete(productId: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  getAll(): Promise<Product> {
-    throw new Error("Method not implemented.");
+  async getAll(): Promise<Product []> {
+      return await prisma.product.findMany()
   }
-  findById(productId: string): Promise<Product> {
-    throw new Error("Method not implemented.");
+  async findById(productId: string): Promise<Product | null> {
+    console.log(productId)
+   const product = prisma.product.findFirst({where: {id: productId}})
+
+   if(!product)
+   {
+    return null
+   }
+
+   return product
   }
 
 }

@@ -2,7 +2,6 @@ import { CategoryRepository } from "../../repositories/category-repository"
 import { UserRepository } from "../../repositories/user-repository"
 
 export interface Category {
-  id: string
   name: string
   description:  string
 }
