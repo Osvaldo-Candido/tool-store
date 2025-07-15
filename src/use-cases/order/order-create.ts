@@ -8,6 +8,7 @@ export interface OrderItem {
   quantity: number
   subtotal: number
   unitiPrice: number
+  itemId?: string
 }
 
 export interface OrderResponseDTO {

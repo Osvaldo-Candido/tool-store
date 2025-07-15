@@ -7,7 +7,7 @@ export class OrderListByIdUseCase {
     private orderRepository: OrderRepository,
     private userRepository: UserRepository
   ){}
-  async execute(userId: string): Promise<OrderResponseDTO | null>{
+  async execute(userId: string){
     const user = await this.userRepository.findById(userId)
 
     if(!user)

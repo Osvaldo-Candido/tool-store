@@ -6,4 +6,4 @@ const authController = new AuthController()
 export function authRoutes(app: FastifyInstance)
 {
   app.post('/login', (request, reply) => authController.login(request, reply))
-}
+}  

@@ -68,9 +68,9 @@ model OrderItems {
   subtotal   Float
   unitiPrice Float
   quantity   Int
-  itemId     String
+  orderId    String
   product    Product @relation(fields: [productId], references: [id])
-  order      Order   @relation(fields: [itemId], references: [id])
+  order      Order   @relation(fields: [orderId], references: [id])
 }
 
 enum Status {

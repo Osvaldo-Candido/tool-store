@@ -96,7 +96,6 @@ export class ProductController {
         return reply.status(200).send(product)
       } catch (error) {
          if (error instanceof z.ZodError) {
-                // Formata os erros do Zod de forma mais amigável
                 const formattedErrors = error.errors.map(err => ({
                     field: err.path.join('.'),
                     message: err.message
@@ -113,9 +112,9 @@ export class ProductController {
 
   async index(reply: FastifyReply){
     try {
-      const users = await productListFactory().execute()
+      const products = await productListFactory().execute()
 
-      return reply.status(200).send(users)
+      return reply.status(200).send(products)
     } catch (error) {   
     }
   }

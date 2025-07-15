@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import z from 'zod'
 import { orderCreateFactory } from "../factories/order/order-create-factory"
+import { orderListFactory } from "../factories/order/order-list-by-user-id-factory"
+import { orderListByIdFactory } from "../factories/order/order-list-by-id"
 
 const orderSchema = z.object({
   productId: z.string().uuid(),
@@ -36,6 +38,30 @@ export class OrderController {
                       });
                   }
                   console.log(error)
+    }
+  }
+
+  async show(request: FastifyRequest, reply: FastifyReply)
+  {
+    try {
+      const userId = request.user.sub
+      const orders = await orderListFactory().execute(userId)
+
+      return reply.status(200).send(orders)
+    } catch (error) {
+      
+    }
+  }
+
+  async showById(request: FastifyRequest, reply: FastifyReply)
+  {
+    const {id} = request.params
+    console.log(id)
+    try {
+      const orders = await orderListByIdFactory().execute(id as string)
+      return reply.status(200).send(orders)
+    } catch (error) {
+      console.error(error)
     }
   }
 }

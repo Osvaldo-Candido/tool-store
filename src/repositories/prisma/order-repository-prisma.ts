@@ -28,22 +28,30 @@ export class OrderRepositoryPrisma implements OrderRepository {
   update(data: Partial<OrderItem>): Promise<OrderResponseDTO> {
     throw new Error("Method not implemented.");
   }
-  async findById(orderId: string): Promise<Order | null> {
-
-   const orders = await prisma.order.findFirst({
-    where: {id: orderId},
+async findById(orderId: string): Promise<Order | null> {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
     include: {
-      OrderItems: true
+      OrderItems: {
+        include: {
+          product: { // Inclui os dados do produto relacionado
+            select: {
+              id: true,
+              name: true, // Inclui o nome do produto
+              price: true // Pode incluir outros campos se necessário
+            }
+          }
+        }
+      }
     }
-   })
+  });
 
-   if(!orders)
-   {
-    return null
-   }
-
-   return orders
+  if (!order) {
+    return null;
   }
+
+  return order;
+}
   async findByUserId(userId: string): Promise<Order [] | null> {
    const orders = await prisma.order.findMany({
     where:{userId: userId}

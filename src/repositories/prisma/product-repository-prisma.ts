@@ -34,11 +34,15 @@ export class ProductRepositoryPrisma implements ProductRepository {
     throw new Error("Method not implemented.");
   }
   async getAll(): Promise<Product []> {
-      return await prisma.product.findMany()
+      return await prisma.product.findMany({
+        include: {
+          images: true
+        }
+      })
   }
   async findById(productId: string): Promise<Product | null> {
     console.log(productId)
-   const product = prisma.product.findFirst({where: {id: productId}})
+   const product = prisma.product.findFirst({where: {id: productId}, include: {images: true}})
 
    if(!product)
    {

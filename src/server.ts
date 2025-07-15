@@ -8,8 +8,14 @@ import { categoryRoutes } from './routes/category.routes'
 import { productRoutes } from './routes/product.routes'
 import { ZodError } from 'zod'
 import { OrderRoutes } from './routes/order.routes'
+import cors from '@fastify/cors'
 
 const app = fastify()
+
+app.register(cors, {
+  origin: true,
+  methods: ['GET','POST','PUT','DELETE']
+})
 
 app.register(multipartfastify, {
   limits: {

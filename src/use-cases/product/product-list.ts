@@ -10,6 +10,6 @@ export class ProductListUseCase {
     
     //Implementar uma função que retorna apenas productos activos
 
-    return { products }
+    return  products 
   }
 }
